@@ -159,6 +159,12 @@ declare -a apis=(
 
 for api in "${apis[@]}"
 do
-    gcloud services enable $api
+    # enable the current API and output how long it took in milliseconds
+    echo "Enabling: $api"
+
+    # if on a mac, you need GNU time (`gtime`) installed with: brew install gtime
+    # if on regular linux, just use regular `time` instead.
+    (gtime -f "%e" gcloud services enable $api --project $project) 2>&1 | xargs printf "Finished in %.0fs\n"
+
 done
 
